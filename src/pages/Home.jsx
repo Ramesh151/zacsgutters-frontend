@@ -1,6 +1,31 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import CheckAvailability from "./CheckAvailability";
+// const Header = () => {
+//   const navigate = useNavigate();
 
+//   return (
+//     <header className="bg-blue-600 text-white p-4">
+//       <div className="container mx-auto flex justify-between items-center">
+//         <h1 className="text-2xl font-bold">Gutter Cleaning Service</h1>
+//         <nav>
+//           <button
+//             onClick={() => navigate("/")}
+//             className="mr-4 hover:text-blue-200"
+//           >
+//             Home
+//           </button>
+//           <button
+//             onClick={() => navigate("/book-service")}
+//             className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-blue-100"
+//           >
+//             Book Service
+//           </button>
+//         </nav>
+//       </div>
+//     </header>
+//   );
+// };
 const ServiceCard = ({ title, description, icon }) => (
   <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center">
     <div className="text-4xl mb-4">{icon}</div>
@@ -113,6 +138,29 @@ const Home = () => {
       </section>
     </div>
   );
+
+  // return (
+  //   <div className="min-h-screen bg-gray-50">
+  //     <Header />
+  //     <main className="container mx-auto py-8 px-4">
+  //       <h1 className="text-4xl font-bold text-center mb-8">
+  //         Welcome to Our Gutter Cleaning Service
+  //       </h1>
+  //       <div className="grid md:grid-cols-2 gap-8">
+  //         <div>
+  //           <h2 className="text-2xl font-semibold mb-4">Our Services</h2>
+  //           <ul className="list-disc list-inside space-y-2">
+  //             <li>Professional gutter cleaning</li>
+  //             <li>Gutter repair and maintenance</li>
+  //             <li>Downspout cleaning and unclogging</li>
+  //             <li>Roof debris removal</li>
+  //           </ul>
+  //         </div>
+  //         <CheckAvailability />
+  //       </div>
+  //     </main>
+  //   </div>
+  // );
 };
 
 export default Home;
