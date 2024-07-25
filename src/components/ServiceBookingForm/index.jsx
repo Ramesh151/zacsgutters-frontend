@@ -76,7 +76,7 @@ const ServiceBookingForm = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [errors, setErrors] = useState({});
   const [paypalData, setPaypalData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   console.log("paypal dat", paypalData);
   const navigate = useNavigate();
   // const navigate = useNavigate();
@@ -98,7 +98,7 @@ const ServiceBookingForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true);
     const validationErrors = validateForm(formData);
     if (Object.keys(validationErrors).length === 0) {
       try {
@@ -126,7 +126,7 @@ const ServiceBookingForm = () => {
             "An error occurred. Please try again later."
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     } else {
       setErrors(validationErrors);
@@ -361,21 +361,19 @@ const ServiceBookingForm = () => {
               <PayPalPaymentForm formData={formData} />
             )} */}
             <div>
-              {/* <button
+              <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                disabled={loading}>
-               {loading ? 'Processing...' : 'Book Service'
               >
                 Book Now
-              </button> */}
-              <button
+              </button>
+              {/* <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 disabled={loading}
               >
                 {loading ? "Processing..." : "Book Service"},
-              </button>
+              </button> */}
             </div>
           </form>
         </div>
