@@ -8,13 +8,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BookingForm from "../pages/BookingForm";
 import Confirmation from "../pages/Confirmation";
 import BookingCancelled from "../pages/BookingCancelled";
+import Home from "../pages/Home";
 // import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<PublicRoute><Home /></PublicRoute>} /> */}
+        <Route path="/" element={<Home />} />
         <Route path="/book-service" element={<BookingForm />} />
         <Route path="/confirmation" element={<Confirmation />} />
         <Route path="/booking-cancelled" element={<BookingCancelled />} />
