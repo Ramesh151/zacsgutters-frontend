@@ -1,33 +1,37 @@
 // src/pages/CheckAvailability.jsx
+
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import moment from "moment";
+
+const TIME_SLOTS = ["9-10 AM", "10-11 AM", "11-12 AM", "12-1 PM", "1-2 PM"];
 
 const CheckAvailability = () => {
   const [postcode, setPostcode] = useState("");
-  const [date, setDate] = useState("");
-  const [timeSlot, setTimeSlot] = useState("");
+  const [availability, setAvailability] = useState(null);
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically make an API call to check availability
-    // For this example, we'll just simulate a response
-    const isAvailable = Math.random() < 0.7; // 70% chance of being available
-
-    if (isAvailable) {
-      navigate("/book-service", {
-        state: { postcode, date, timeSlot },
-      });
-    } else {
-      setMessage("Sorry, this time slot is not available. Please try another.");
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/customers/check-availability",
+        {
+          postcode,
+        }
+      );
+      setAvailability(response.data.data);
+      setMessage("");
+    } catch (error) {
+      setMessage("Error checking availability. Please try again.");
+      console.error("Error fetching availability:", error);
     }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Check Availability</h1>
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-6">
         <div className="mb-4">
           <label htmlFor="postcode" className="block mb-2">
             Postcode
@@ -41,36 +45,6 @@ const CheckAvailability = () => {
             required
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="date" className="block mb-2">
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="timeSlot" className="block mb-2">
-            Time Slot
-          </label>
-          <select
-            id="timeSlot"
-            value={timeSlot}
-            onChange={(e) => setTimeSlot(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">Select a time slot</option>
-            <option value="morning">Morning</option>
-            <option value="afternoon">Afternoon</option>
-            <option value="evening">Evening</option>
-          </select>
-        </div>
         <button
           type="submit"
           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
@@ -78,12 +52,239 @@ const CheckAvailability = () => {
           Check Availability
         </button>
       </form>
+
+      {availability && (
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border-collapse">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2">Date</th>
+                {TIME_SLOTS.map((slot) => (
+                  <th key={slot} className="border px-4 py-2">
+                    {slot}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(availability).map(([date, slots]) => (
+                <tr key={date}>
+                  <td className="border px-4 py-2">{date}</td>
+                  {slots.map(({ timeSlot, isBooked }) => (
+                    <td
+                      key={timeSlot}
+                      className={`border px-4 py-2 text-center ${
+                        isBooked ? "bg-red-500" : "bg-blue-500"
+                      } text-white`}
+                    >
+                      {timeSlot}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       {message && <p className="mt-4 text-red-600 text-center">{message}</p>}
     </div>
   );
 };
 
 export default CheckAvailability;
+
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios";
+
+// const TIME_SLOTS = ["9-10 AM", "10-11 AM", "11-12 AM", "12-1 PM", "1-2 PM"];
+
+// const CheckAvailability = () => {
+//   const [postcode, setPostcode] = useState("");
+//   const [date, setDate] = useState("");
+//   const [availability, setAvailability] = useState(null);
+//   const [message, setMessage] = useState("");
+//   const navigate = useNavigate();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const response = await axios.post(
+//         "http://localhost:4000/api/customers/check-availability",
+//         {
+//           date,
+//           postcode,
+//         }
+//       );
+//       setAvailability(response.data);
+//       setMessage("");
+//     } catch (error) {
+//       setMessage("Error checking availability. Please try again.");
+//       console.error("Error fetching availability:", error);
+//     }
+//   };
+
+//   const handleTimeSlotClick = (timeSlot) => {
+//     if (availability && !availability.bookedTimeSlots.includes(timeSlot)) {
+//       navigate("/book-service", {
+//         state: { postcode, date, timeSlot },
+//       });
+//     } else {
+//       setMessage("Sorry, this time slot is not available. Please try another.");
+//     }
+//   };
+
+//   return (
+//     <div className="container mx-auto px-4 py-8">
+//       <h1 className="text-3xl font-bold mb-6">Check Availability</h1>
+//       <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-6">
+//         <div className="mb-4">
+//           <label htmlFor="postcode" className="block mb-2">
+//             Postcode
+//           </label>
+//           <input
+//             type="text"
+//             id="postcode"
+//             value={postcode}
+//             onChange={(e) => setPostcode(e.target.value)}
+//             className="w-full p-2 border rounded"
+//             required
+//           />
+//         </div>
+//         <div className="mb-4">
+//           <label htmlFor="date" className="block mb-2">
+//             Date
+//           </label>
+//           <input
+//             type="date"
+//             id="date"
+//             value={date}
+//             onChange={(e) => setDate(e.target.value)}
+//             className="w-full p-2 border rounded"
+//             required
+//           />
+//         </div>
+//         <button
+//           type="submit"
+//           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+//         >
+//           Check Availability
+//         </button>
+//       </form>
+
+//       {availability && (
+//         <div className="max-w-md mx-auto">
+//           <h2 className="text-xl font-bold mb-4">Available Time Slots</h2>
+//           <div className="grid grid-cols-1 gap-4">
+//             {TIME_SLOTS.map((slot) => (
+//               <button
+//                 key={slot}
+//                 onClick={() => handleTimeSlotClick(slot)}
+//                 className={`w-full p-2 rounded text-white ${
+//                   availability.bookedTimeSlots.includes(slot)
+//                     ? "bg-red-500 cursor-not-allowed"
+//                     : "bg-green-500 hover:bg-green-700"
+//                 }`}
+//                 disabled={availability.bookedTimeSlots.includes(slot)}
+//               >
+//                 {slot}
+//               </button>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+//       {message && <p className="mt-4 text-red-600 text-center">{message}</p>}
+//     </div>
+//   );
+// };
+
+// export default CheckAvailability;
+
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// const CheckAvailability = () => {
+//   const [postcode, setPostcode] = useState("");
+//   const [date, setDate] = useState("");
+//   const [timeSlot, setTimeSlot] = useState("");
+//   const [message, setMessage] = useState("");
+//   const navigate = useNavigate();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     // Here you would typically make an API call to check availability
+//     // For this example, we'll just simulate a response
+//     const isAvailable = Math.random() < 0.7; // 70% chance of being available
+
+//     if (isAvailable) {
+//       navigate("/book-service", {
+//         state: { postcode, date, timeSlot },
+//       });
+//     } else {
+//       setMessage("Sorry, this time slot is not available. Please try another.");
+//     }
+//   };
+
+//   return (
+//     <div className="container mx-auto px-4 py-8">
+//       <h1 className="text-3xl font-bold mb-6">Check Availability</h1>
+//       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+//         <div className="mb-4">
+//           <label htmlFor="postcode" className="block mb-2">
+//             Postcode
+//           </label>
+//           <input
+//             type="text"
+//             id="postcode"
+//             value={postcode}
+//             onChange={(e) => setPostcode(e.target.value)}
+//             className="w-full p-2 border rounded"
+//             required
+//           />
+//         </div>
+//         <div className="mb-4">
+//           <label htmlFor="date" className="block mb-2">
+//             Date
+//           </label>
+//           <input
+//             type="date"
+//             id="date"
+//             value={date}
+//             onChange={(e) => setDate(e.target.value)}
+//             className="w-full p-2 border rounded"
+//             required
+//           />
+//         </div>
+//         <div className="mb-4">
+//           <label htmlFor="timeSlot" className="block mb-2">
+//             Time Slot
+//           </label>
+//           <select
+//             id="timeSlot"
+//             value={timeSlot}
+//             onChange={(e) => setTimeSlot(e.target.value)}
+//             className="w-full p-2 border rounded"
+//             required
+//           >
+//             <option value="">Select a time slot</option>
+//             <option value="morning">Morning</option>
+//             <option value="afternoon">Afternoon</option>
+//             <option value="evening">Evening</option>
+//           </select>
+//         </div>
+//         <button
+//           type="submit"
+//           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+//         >
+//           Check Availability
+//         </button>
+//       </form>
+//       {message && <p className="mt-4 text-red-600 text-center">{message}</p>}
+//     </div>
+//   );
+// };
+
+// export default CheckAvailability;
 
 // import React, { useState } from "react";
 
