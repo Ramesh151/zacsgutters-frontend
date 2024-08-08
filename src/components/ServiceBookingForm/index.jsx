@@ -101,8 +101,6 @@ const INITIAL_FORM_STATE = {
   selectPropertyType: "",
   numberOfBedrooms: "",
   numberOfStories: "",
-  howDidYouHearAboutUs: "",
-  file: null || [],
   message: "",
   paymentMethod: "",
 };
@@ -150,19 +148,19 @@ const STORY_OPTIONS = [
   { value: "4", label: "4" },
 ];
 
-const HEAR_ABOUT_US_OPTIONS = [
-  { value: "Search Engine", label: "Search Engine" },
-  { value: "Recommendation", label: "Recommendation" },
-  { value: "Social Media", label: "Social Media" },
-  { value: "Flyers / Marketing", label: "Flyers / Marketing" },
-  { value: "Other", label: "Other" },
-];
+// const HEAR_ABOUT_US_OPTIONS = [
+//   { value: "Search Engine", label: "Search Engine" },
+//   { value: "Recommendation", label: "Recommendation" },
+//   { value: "Social Media", label: "Social Media" },
+//   { value: "Flyers / Marketing", label: "Flyers / Marketing" },
+//   { value: "Other", label: "Other" },
+// ];
 
-const PAYMENT_METHOD_OPTIONS = [
-  { value: "PayPal", label: "PayPal" },
-  { value: "Cash", label: "Cash" },
-  { value: "Online", label: "Online" },
-];
+// const PAYMENT_METHOD_OPTIONS = [
+//   { value: "PayPal", label: "PayPal" },
+//   { value: "Cash", label: "Cash" },
+//   { value: "Online", label: "Online" },
+// ];
 
 const ServiceBookingForm = () => {
   const location = useLocation();
@@ -194,9 +192,14 @@ const ServiceBookingForm = () => {
 
   const handleDateChange = useCallback(
     (date) => {
+      console.log("date", date);
+      const localDate = new Date(date);
+      console.log("date 1", localDate);
+      const formattedDate = localDate.toISOString();
+      console.log("formate date", formattedDate);
       setFormData((prevState) => ({
         ...prevState,
-        selectedDate: date,
+        selectedDate: formattedDate,
       }));
       if (errors.selectedDate) {
         setErrors((prevErrors) => ({ ...prevErrors, selectedDate: "" }));
@@ -205,12 +208,12 @@ const ServiceBookingForm = () => {
     [errors]
   );
 
-  const handleFileChange = useCallback((e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      file: e.target.files[0],
-    }));
-  }, []);
+  // const handleFileChange = useCallback((e) => {
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     file: e.target.files[0],
+  //   }));
+  // }, []);
 
   const validateForm = useCallback(() => {
     const newErrors = {};
@@ -434,7 +437,7 @@ const ServiceBookingForm = () => {
                 error={errors.numberOfStories}
               />
             </div>
-            <SelectField
+            {/* <SelectField
               label="How did you hear about us?"
               name="howDidYouHearAboutUs"
               value={formData.howDidYouHearAboutUs}
@@ -457,7 +460,7 @@ const ServiceBookingForm = () => {
                 onChange={handleFileChange}
                 className="mt-1 block w-full"
               />
-            </div>
+            </div> */}
             <div>
               <label
                 htmlFor="message"
@@ -481,8 +484,8 @@ const ServiceBookingForm = () => {
               onChange={handleInputChange}
               options={[
                 { value: "PayPal", label: "PayPal" },
-                { value: "Cash", label: "Cash" },
-                { value: "Online", label: "Online" },
+                // { value: "Cash", label: "Cash" },
+                // { value: "Online", label: "Online" },
               ]}
               required
             />

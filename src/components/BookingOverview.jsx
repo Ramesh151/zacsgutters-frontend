@@ -149,9 +149,9 @@ const BookingOverview = () => {
               </p>
             </Section>
             <Section title="Additional Information">
-              <p>How did you hear about us: {formData.howDidYouHearAboutUs}</p>
+              {/* <p>How did you hear about us: {formData.howDidYouHearAboutUs}</p> */}
               {formData.message && <p>Message: {formData.message}</p>}
-              {formData.file && <p>File: {formData.file.name}</p>}
+              {/* {formData.file && <p>File: {formData.file.name}</p>} */}
             </Section>
           </motion.div>
         );
