@@ -1,7 +1,8 @@
 //src/service/api.js
 import axios from "axios";
 const api = axios.create({
-  baseURL: "https://zacsgutters.onrender.com",
+  // baseURL: "https://zacsgutters.onrender.com",
+  baseURL: "http://localhost:4000",
 });
 export const checkCustomer = async (formData) => {
   try {
