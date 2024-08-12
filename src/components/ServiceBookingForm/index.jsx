@@ -202,19 +202,41 @@ const ServiceBookingForm = () => {
     });
   };
 
+  // const handleOptionChange = (selectedOptions, serviceType) => {
+  //   setFormData((prevState) => {
+  //     const newOptions = selectedOptions
+  //       ? selectedOptions.map((option) => option.value)
+  //       : [];
+  //     const newFormData = {
+  //       ...prevState,
+  //       [serviceType]: newOptions,
+  //     };
+  //     const newTotalPrice = calculateTotalPrice(newFormData); // Ensure this function is defined to calculate based on selected options
+  //     setTotalPrice(newTotalPrice);
+  //     return newFormData;
+  //   });
+  // };
+
   const handleOptionChange = (selectedOptions, serviceType) => {
-    setFormData((prevState) => {
-      const newFormData = {
-        ...prevState,
-        [serviceType]: selectedOptions
-          ? selectedOptions.map((option) => option.value)
-          : [],
-      };
-      const newTotalPrice = calculateTotalPrice(newFormData);
-      setTotalPrice(newTotalPrice);
-      return newFormData;
-    });
+    setFormData((prevState) => ({
+      ...prevState,
+      [serviceType]: selectedOptions,
+    }));
   };
+  // const handleOptionChange = (selectedOptions, serviceType) => {
+  //   setFormData((prevState) => {
+  //     const newFormData = {
+  //       ...prevState,
+  //       [serviceType]: selectedOptions
+  //         ? selectedOptions.map((option) => option.value)
+  //         : [],
+  //     };
+  //     const newTotalPrice = calculateTotalPrice(newFormData);
+  //     setTotalPrice(newTotalPrice);
+  //     return newFormData;
+  //   });
+  // };
+
   const handleDateChange = useCallback(
     (date) => {
       console.log("date", date);
@@ -413,7 +435,7 @@ const ServiceBookingForm = () => {
               />
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label className="block text-sm font-medium text-gray-700">
                   Select Service
                 </label>
@@ -462,7 +484,201 @@ const ServiceBookingForm = () => {
                     // styles={customStyles}
                   />
                 </div>
+              )} */}
+
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700">
+                  Select Service
+                </label>
+                <Select
+                  options={SERVICE_OPTIONS}
+                  onChange={handleServiceChange}
+                  className="mt-1"
+                />
+              </div>
+
+              {formData.selectService === "Gutter Cleaning" && (
+                <div className="form-group mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Do you also need Gutter Cleaning for below.
+                  </label>
+                  <div className="space-y-2">
+                    {GUTTER_CLEANING_OPTIONS.map((option) => (
+                      <div key={option.value} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={option.value}
+                          value={option.value}
+                          checked={formData.gutterCleaningOptions.includes(
+                            option.value
+                          )}
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            handleOptionChange(
+                              isChecked
+                                ? [
+                                    ...formData.gutterCleaningOptions,
+                                    option.value,
+                                  ]
+                                : formData.gutterCleaningOptions.filter(
+                                    (val) => val !== option.value
+                                  ),
+                              "gutterCleaningOptions"
+                            );
+                          }}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label
+                          htmlFor={option.value}
+                          className="ml-2 block text-sm text-gray-900"
+                        >
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
+
+              {formData.selectService === "Gutter Repair" && (
+                <div className="form-group mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Do you also need Gutter Repairs for below.
+                  </label>
+                  <div className="space-y-2">
+                    {GUTTER_REPAIRS_OPTIONS.map((option) => (
+                      <div key={option.value} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={option.value}
+                          value={option.value}
+                          checked={formData.gutterRepairsOptions.includes(
+                            option.value
+                          )}
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            handleOptionChange(
+                              isChecked
+                                ? [
+                                    ...formData.gutterRepairsOptions,
+                                    option.value,
+                                  ]
+                                : formData.gutterRepairsOptions.filter(
+                                    (val) => val !== option.value
+                                  ),
+                              "gutterRepairsOptions"
+                            );
+                          }}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label
+                          htmlFor={option.value}
+                          className="ml-2 block text-sm text-gray-900"
+                        >
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700">
+                  Select Service
+                </label>
+                <Select
+                  options={SERVICE_OPTIONS}
+                  onChange={handleServiceChange}
+                  className="mt-1"
+                />
+              </div>
+
+              {formData.selectService === "Gutter Cleaning" && (
+                <div className="form-group mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Do you also need Gutter Cleaning for below.
+                  </label>
+                  <div className="space-y-2">
+                    {GUTTER_CLEANING_OPTIONS.map((option) => (
+                      <div key={option.value} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={option.value}
+                          value={option.value}
+                          checked={formData.gutterCleaningOptions.includes(
+                            option.value
+                          )}
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            handleOptionChange(
+                              isChecked
+                                ? [
+                                    ...formData.gutterCleaningOptions,
+                                    option.value,
+                                  ]
+                                : formData.gutterCleaningOptions.filter(
+                                    (val) => val !== option.value
+                                  ),
+                              "gutterCleaningOptions"
+                            );
+                          }}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label
+                          htmlFor={option.value}
+                          className="ml-2 block text-sm text-gray-900"
+                        >
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {formData.selectService === "Gutter Repair" && (
+                <div className="form-group mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Do you also need Gutter Repairs for below.
+                  </label>
+                  <div className="space-y-2">
+                    {GUTTER_REPAIRS_OPTIONS.map((option) => (
+                      <div key={option.value} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={option.value}
+                          value={option.value}
+                          checked={formData.gutterRepairsOptions.includes(
+                            option.value
+                          )}
+                          onChange={(e) => {
+                            const isChecked = e.target.checked;
+                            handleOptionChange(
+                              isChecked
+                                ? [
+                                    ...formData.gutterRepairsOptions,
+                                    option.value,
+                                  ]
+                                : formData.gutterRepairsOptions.filter(
+                                    (val) => val !== option.value
+                                  ),
+                              "gutterRepairsOptions"
+                            );
+                          }}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label
+                          htmlFor={option.value}
+                          className="ml-2 block text-sm text-gray-900"
+                        >
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )} */}
 
               <SelectField
                 label="Home Type"
@@ -541,6 +757,8 @@ const ServiceBookingForm = () => {
 };
 
 export default ServiceBookingForm;
+
+//************************************************************************** */
 
 // import React, { useState, useCallback, useEffect } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
