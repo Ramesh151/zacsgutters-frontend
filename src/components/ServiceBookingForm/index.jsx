@@ -239,14 +239,25 @@ const ServiceBookingForm = () => {
 
   const handleDateChange = useCallback(
     (date) => {
-      console.log("date", date);
+      console.log("Selected Date:", date);
+
+      // Date ko local time zone mein convert karna
       const localDate = new Date(date);
-      console.log("date 1", localDate);
-      const formattedDate = localDate.toISOString();
-      console.log("formate date", formattedDate);
+
+      // Local date ko UTC date mein convert karna
+      const utcDate = new Date(
+        localDate.getTime() - localDate.getTimezoneOffset() * 60000
+      );
+
+      const UTC_date = utcDate.toISOString();
+      console.log(UTC_date);
+
+      // Local time zone mein display ke liye adjust karna
+      const localFormattedDate = localDate.toLocaleString();
+      console.log("Local Formatted Date:", localFormattedDate);
       setFormData((prevState) => ({
         ...prevState,
-        selectedDate: formattedDate,
+        selectedDate: UTC_date,
       }));
       if (errors.selectedDate) {
         setErrors((prevErrors) => ({ ...prevErrors, selectedDate: "" }));
