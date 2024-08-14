@@ -11,7 +11,7 @@ import {
   PencilIcon,
 } from "lucide-react";
 import { createCustomer, cancelPayment, capturePayment } from "../services/api";
-import { data } from "autoprefixer";
+
 
 const PAYPAL_CLIENT_ID =
   "AT9KqWFK0PICuNSj58vl_HrKE_fKwJOzk7j9c0d37e8jfN9AwCYCM5rCWjbBYJ5Yne-48CpTFvBfAK5Y";
@@ -31,13 +31,15 @@ const BookingOverview = () => {
 
   const handleNext = () =>
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+
   const handlePrev = useCallback(async () => {
     if (currentStep === 2 && orderCreated) {
       try {
         await cancelPayment(paypalOrderId);
-        toast.info("Order cancelled");
+        toast.info("Order cancelled to niche wla btn");
         setOrderCreated(false);
         setPaypalOrderId(null);
+        setCurrentStep(1);
       } catch (error) {
         console.error("Error cancelling order:", error);
         toast.error(
@@ -50,6 +52,7 @@ const BookingOverview = () => {
   }, [currentStep, orderCreated, paypalOrderId]);
 
   // const handleEdit = () => navigate(-1);
+
   const handleEdit = () => {
     navigate("/booking-service", { state: { formData } });
   };
@@ -104,11 +107,11 @@ const BookingOverview = () => {
 
   const handlePayPalCancel = useCallback(async () => {
     try {
-      const response = await cancelPayment(paypalOrderId);
-      console.log("response xyzzz", response);
-
-      toast.info(response?.data?.response?.data?.message);
-      // setCurrentStep(1);
+      await cancelPayment(paypalOrderId);
+      toast.info("Order cancelled to niche wla btn");
+      setOrderCreated(false);
+      setPaypalOrderId(null);
+      setCurrentStep(1);
     } catch (error) {
       console.error("Error cancelling payment:", error?.response);
       toast.error(
@@ -159,8 +162,8 @@ const BookingOverview = () => {
             </Section>
             <Section title="Service Details">
               <p>Service: {formData.selectService}</p>
-              <p>Number of Bedrooms: {formData.numberOfBedrooms}</p>
-              <p>Number of Stories: {formData.numberOfStories}</p>
+              <p>Home Type: {formData.selectHomeType}</p>
+              <p>Home Style: {formData.selectHomeStyle}</p>
               <p>Date: {formatDate(new Date(formData.selectedDate))}</p>
               <p>Time Slot: {formData.selectedTimeSlot}</p>
               <p className="font-bold">Price: ${formData.totalPrice}</p>
