@@ -47,10 +47,6 @@ export const validateForm = (formData) => {
     errors.numberOfStories = "Number of stories is required";
   }
 
-  if (!formData.howDidYouHearAboutUs) {
-    errors.howDidYouHearAboutUs = "This field is required";
-  }
-
   if (!formData.paymentMethod) {
     errors.paymentMethod = "Payment method is required";
   }
